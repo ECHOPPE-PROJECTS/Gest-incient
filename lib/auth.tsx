@@ -30,16 +30,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      api
-        .get("/users/me/")
-        .then((res) => setUser(res.data))
-        .catch(() => localStorage.clear())
-        .finally(() => setLoading(false));
-    } else {
+    const initAuth = async () => {
+      const token = localStorage.getItem("access_token");
+      if (token) {
+        try {
+          const res = await api.get("/users/me/");
+          setUser(res.data);
+        } catch {
+          localStorage.clear();
+        }
+      }
       setLoading(false);
-    }
+    };
+
+    initAuth();
   }, []);
 
   const login = async (email: string, password: string) => {

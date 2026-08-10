@@ -150,7 +150,7 @@ export default function IncidentDetailPage() {
                 onClick={handleClose}
                 className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
               >
-                Fermer l'incident
+                Fermer l&apos;incident
               </button>
             </div>
           )}
