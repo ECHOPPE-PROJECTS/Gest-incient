@@ -34,13 +34,29 @@ export default function NewIncidentPage() {
   }, [user, loading, router]);
 
   useEffect(() => {
-    api.get("/categories/").then((res) =>
-      setCategories(res.data.results || res.data)
-    );
-    api.get("/priorities/").then((res) =>
-      setPriorities(res.data.results || res.data)
-    );
-  }, []);
+    if (loading || !user) return;
+
+    const normalizeList = (data: any) => {
+      if (Array.isArray(data)) return data;
+      return data.results ?? data.categories ?? data.priorities ?? [];
+    };
+
+    api
+      .get("/categories/")
+      .then((res) => setCategories(normalizeList(res.data)))
+      .catch(() => {
+        toast.error("Impossible de charger les catégories");
+        setCategories([]);
+      });
+
+    api
+      .get("/priorities/")
+      .then((res) => setPriorities(normalizeList(res.data)))
+      .catch(() => {
+        toast.error("Impossible de charger les priorités");
+        setPriorities([]);
+      });
+  }, [loading, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +105,7 @@ export default function NewIncidentPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400"
               placeholder="Ex: Connexion Internet impossible"
             />
           </div>
@@ -102,7 +118,7 @@ export default function NewIncidentPage() {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400"
             >
               <option value="">Sélectionner une catégorie</option>
               {categories.map((c) => (
@@ -121,7 +137,7 @@ export default function NewIncidentPage() {
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400"
             >
               <option value="">Sélectionner une priorité</option>
               {priorities.map((p) => (
@@ -141,7 +157,7 @@ export default function NewIncidentPage() {
               onChange={(e) => setDescription(e.target.value)}
               required
               rows={5}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400"
               placeholder="Décrivez le problème rencontré..."
             />
           </div>

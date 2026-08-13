@@ -28,7 +28,9 @@ export default function IncidentsPage() {
 
   useEffect(() => {
     if (!user) return;
-    const params = statusFilter ? `?status=${statusFilter}` : "";
+    const params = statusFilter
+      ? `?status=${encodeURIComponent(statusFilter)}`
+      : "";
     api.get(`/incidents/${params}`).then((res) => {
       setIncidents(res.data.results || res.data);
     });

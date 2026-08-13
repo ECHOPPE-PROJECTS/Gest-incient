@@ -172,7 +172,7 @@ export default function IncidentDetailPage() {
                     {c.author.first_name} {c.author.last_name}
                   </span>
                   <span className="text-xs text-gray-400">
-                    {new Date(c.created_at).toLocaleDateString("fr-FR", {
+                    {new Date(c.created_at).toLocaleString("fr-FR", {
                       dateStyle: "short",
                       timeStyle: "short",
                     })}
@@ -192,7 +192,7 @@ export default function IncidentDetailPage() {
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Ajouter un commentaire..."
               rows={2}
-              className="block flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="block flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400"
             />
             <button
               type="submit"

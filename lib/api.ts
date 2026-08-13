@@ -1,9 +1,11 @@
 import axios from "axios";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://backend-t8k0.onrender.com";
+
+const API_PREFIX = "/api";
 
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: `${API_BASE}${API_PREFIX}`,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -26,7 +28,7 @@ api.interceptors.response.use(
       const refresh = localStorage.getItem("refresh_token");
       if (refresh) {
         try {
-          const { data } = await axios.post(`${API_BASE}/auth/refresh/`, {
+          const { data } = await axios.post(`${API_BASE}${API_PREFIX}/auth/refresh/`, {
             refresh,
           });
           localStorage.setItem("access_token", data.access);

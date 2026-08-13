@@ -84,7 +84,7 @@ export default function NotificationsPage() {
                   <p className="mt-1 text-sm text-gray-500">{n.message}</p>
                 </div>
                 <span className="whitespace-nowrap text-xs text-gray-400">
-                  {new Date(n.created_at).toLocaleDateString("fr-FR", {
+                  {new Date(n.created_at).toLocaleString("fr-FR", {
                     dateStyle: "short",
                     timeStyle: "short",
                   })}

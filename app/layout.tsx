@@ -27,7 +27,7 @@ export default function RootLayout({
       lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-gray-50">
+      <body suppressHydrationWarning className="min-h-full bg-gray-50 text-gray-900 dark:bg-slate-950 dark:text-white">
         <AuthProvider>
           {children}
           <Toaster richColors position="top-right" />
