@@ -16,6 +16,14 @@ interface Incident {
   created_at: string;
 }
 
+const statusColors: Record<string, string> = {
+  Nouveau: "bg-yellow-100 text-yellow-800",
+  Assigné: "bg-purple-100 text-purple-800",
+  "En cours": "bg-orange-100 text-orange-800",
+  Résolu: "bg-green-100 text-green-800",
+  Fermé: "bg-gray-100 text-gray-600",
+};
+
 export default function IncidentsPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -54,7 +62,7 @@ export default function IncidentsPage() {
         </div>
 
         <div className="mb-4 flex gap-2">
-          {["", "Nouveau", "En cours", "Resolu", "Ferme"].map((s) => (
+          {["", "Nouveau", "En cours", "Assigné", "Résolu", "Fermé"].map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
@@ -94,7 +102,7 @@ export default function IncidentsPage() {
                   <td className="px-6 py-4 text-sm text-gray-700">{inc.title}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{inc.category.name}</td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[inc.status.name] || "bg-blue-100 text-blue-800"}`}>
                       {inc.status.name}
                     </span>
                   </td>

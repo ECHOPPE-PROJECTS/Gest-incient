@@ -30,6 +30,14 @@ interface IncidentDetail {
   closed_at: string | null;
 }
 
+const statusColors: Record<string, string> = {
+  Nouveau: "bg-yellow-100 text-yellow-800",
+  Assigné: "bg-purple-100 text-purple-800",
+  "En cours": "bg-orange-100 text-orange-800",
+  Résolu: "bg-green-100 text-green-800",
+  Fermé: "bg-gray-100 text-gray-600",
+};
+
 export default function IncidentDetailPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -65,18 +73,32 @@ export default function IncidentDetailPage() {
 
   const handleClose = async () => {
     try {
-      await api.post(`/incidents/${params.id}/close/`);
+      await api.post(`/incidents/${params.id}/close_ticket/`);
       const res = await api.get(`/incidents/${params.id}/`);
       setIncident(res.data);
       toast.success("Incident fermé");
     } catch {
-      toast.error("Erreur");
+      toast.error("Erreur lors de la fermeture");
+    }
+  };
+
+  const handleReopen = async () => {
+    try {
+      await api.post(`/incidents/${params.id}/reopen/`);
+      const res = await api.get(`/incidents/${params.id}/`);
+      setIncident(res.data);
+      toast.success("Incident rouvert");
+    } catch {
+      toast.error("Erreur lors de la réouverture");
     }
   };
 
   if (loading || !incident)
     return <div className="p-8 text-center">Chargement...</div>;
   if (!user) return null;
+
+  const isResolved = incident.status.name === "Résolu";
+  const isClosed = incident.status.name === "Fermé";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -97,7 +119,7 @@ export default function IncidentDetailPage() {
                 {incident.title}
               </h1>
             </div>
-            <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
+            <span className={`rounded-full px-3 py-1 text-sm font-medium ${statusColors[incident.status.name] || "bg-blue-100 text-blue-800"}`}>
               {incident.status.name}
             </span>
           </div>
@@ -144,16 +166,32 @@ export default function IncidentDetailPage() {
             </p>
           </div>
 
-          {incident.status.name !== "Ferme" && (
-            <div className="mb-8 flex gap-3">
-              <button
-                onClick={handleClose}
-                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-              >
-                Fermer l&apos;incident
-              </button>
+          {(isResolved || isClosed) && (
+            <div className="mb-8 rounded-lg bg-amber-50 p-4 text-sm text-amber-800 ring-1 ring-amber-200">
+              {isResolved
+                ? "Ce ticket a été résolu par le technicien. Vous pouvez le fermer si vous êtes satisfait, ou le rouvrir si vous souhaitez d'autres modifications."
+                : "Ce ticket est fermé. Vous pouvez le rouvrir si vous souhaitez d'autres modifications."}
             </div>
           )}
+
+          <div className="mb-8 flex gap-3">
+            {isResolved && (
+              <button
+                onClick={handleClose}
+                className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+              >
+                Fermer le ticket (satisfait)
+              </button>
+            )}
+            {(isResolved || isClosed) && (
+              <button
+                onClick={handleReopen}
+                className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700"
+              >
+                Rouvrir le ticket
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="mt-6 rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-200">

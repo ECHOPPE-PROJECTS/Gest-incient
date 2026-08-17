@@ -77,3 +77,20 @@ export interface Notification {
   is_read: boolean;
   created_at: string;
 }
+
+export interface Discussion {
+  id: number;
+  title: string;
+  participants: User[];
+  created_at: string;
+  last_message: Message | null;
+  messages_count: number;
+}
+
+export interface Message {
+  id: number;
+  user: User;
+  discussion: number;
+  content: string;
+  created_at: string;
+}

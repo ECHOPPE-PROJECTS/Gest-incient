@@ -40,6 +40,12 @@ export default function Header() {
               Mes incidents
             </Link>
             <Link
+              href="/discussions"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Messages
+            </Link>
+            <Link
               href="/notifications"
               className="relative text-sm font-medium text-gray-600 hover:text-gray-900"
             >

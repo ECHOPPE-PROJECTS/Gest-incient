@@ -11,6 +11,7 @@ interface Stats {
   open: number;
   in_progress: number;
   resolved: number;
+  closed: number;
 }
 
 interface Incident {
@@ -31,6 +32,7 @@ export default function DashboardPage() {
     open: 0,
     in_progress: 0,
     resolved: 0,
+    closed: 0,
   });
 
   useEffect(() => {
@@ -46,9 +48,10 @@ export default function DashboardPage() {
         total: items.length,
         open: items.filter((i) => i.status.name === "Nouveau").length,
         in_progress: items.filter(
-          (i) => i.status.name === "En cours" || i.status.name === "Assigne"
+          (i) => i.status.name === "En cours" || i.status.name === "Assigné"
         ).length,
-        resolved: items.filter((i) => i.status.name === "Resolu").length,
+        resolved: items.filter((i) => i.status.name === "Résolu").length,
+        closed: items.filter((i) => i.status.name === "Fermé").length,
       });
     });
   }, [user]);
@@ -72,12 +75,13 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
           {[
             { label: "Total", value: stats.total, color: "bg-blue-500" },
             { label: "Ouverts", value: stats.open, color: "bg-yellow-500" },
             { label: "En cours", value: stats.in_progress, color: "bg-orange-500" },
             { label: "Résolus", value: stats.resolved, color: "bg-green-500" },
+            { label: "Fermés", value: stats.closed, color: "bg-gray-500" },
           ].map((s) => (
             <div
               key={s.label}
