@@ -13,6 +13,7 @@ interface User {
   first_name: string;
   last_name: string;
   email: string;
+  role?: { name: string } | null;
 }
 
 interface Message {
@@ -59,7 +60,7 @@ export default function DiscussionsPage() {
     if (!user) return;
     api.get("/users/").then((res) => {
       const users = res.data.results || res.data;
-      const admin = users.find((u: User) => u.username === "admin");
+      const admin = users.find((u: User) => u.role?.name === "Administrateur");
       setAdminUser(admin || null);
     });
   }, [user]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import api from "@/lib/api";
@@ -14,11 +14,11 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState("");
   const [updating, setUpdating] = useState(false);
 
-  if (loading) return <div className="p-8 text-center">Chargement...</div>;
-  if (!user) {
-    router.push("/login");
-    return null;
-  }
+  useEffect(() => {
+    if (!loading && !user) router.push("/login");
+  }, [user, loading, router]);
+
+  if (loading || !user) return <div className="p-8 text-center">Chargement...</div>;
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
